@@ -47,3 +47,10 @@ class FastAPIAndBabel:
     def ngettext(self, singular, plural, n):
         translation = self.get_translation()
         return translation.ngettext(singular, plural, n)
+    
+    def get_multi_language_text(self, message: dict):
+        translations = {}
+        for language in self.translations.keys():
+            translation = self.translations[language]
+            translations[language] = translation.gettext(message)
+        return translations
