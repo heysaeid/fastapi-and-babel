@@ -36,6 +36,9 @@ class FastAPIAndBabel:
         if language not in self.translations:
             self.translations[language] = self.load_translation(language)
         return self.translation[language]
+    
+    def set_default_locale(self, default_locale: str):
+        self.app.state.babel.default_locale = default_locale
 
     def gettext(self, message):
         translation = self.get_translation()
