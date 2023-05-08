@@ -38,9 +38,9 @@ pybabel init -i messages.pot -d translations -l fa
 Here -d says to save translations in translations, you can change it in config
 
 After adding your messages, use the following command to compile
-‍‍‍```
-pybabel compile -d translations
-```
+
+```pybabel compile -d translations```
+
 
 Now we can translate our texts using the gettext method
 ```
