@@ -44,9 +44,11 @@ After adding your messages, use the following command to compile
 
 Now we can translate our texts using the gettext method
 ```
+from fastapi_and_babel import gettext as _
+
 @app.get("/")
 def index():
-    return {"text": translator.gettext("Hello World!")}
+    return {"text": _("Hello World!")}
 ```
 
 
