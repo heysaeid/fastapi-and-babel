@@ -1,5 +1,6 @@
 import os
-import gettext
+import gettext as main_gettext
+from typing import Optional
 from dataclasses import dataclass
 from fastapi import FastAPI
 from fastapi_and_babel.middleware import Middleware 
@@ -12,12 +13,14 @@ class BabelConfiguration:
 
 
 class FastAPIAndBabel:
+    instance: Optional["FastAPIAndBabel"] = None
 
     def __init__(self, app: FastAPI, locale: str, domain: str = "messages", translation_directory: str = "translations") -> None:
+        FastAPIAndBabel.instance = self
         self.locale = locale
         self.domain = domain
         self.translation_directory = translation_directory
-        self.translation = {}
+        self.translations = {}
         self.app = app
 
         app.state.babel = BabelConfiguration(default_locale = self.locale, instance = self)
@@ -25,9 +28,9 @@ class FastAPIAndBabel:
 
     def load_translation(self, language: str):
         if language not in self.translations:
-            localedir = os.path.join(os.path.dirname(os.path.abspath(__file__)), self.translation_directory)
+            localedir = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{self.translation_directory}")
             localedir = os.path.normpath(localedir)
-            translation = gettext.translation(self.domain, localedir, languages=[self.app.state.babel.default_locale])
+            translation = main_gettext.translation(self.domain, localedir, languages=[self.app.state.babel.default_locale])
             self.translations[language] = translation
         return self.translations[language]
 
@@ -35,7 +38,7 @@ class FastAPIAndBabel:
         language = self.app.state.babel.default_locale
         if language not in self.translations:
             self.translations[language] = self.load_translation(language)
-        return self.translation[language]
+        return self.translations[language]
     
     def set_default_locale(self, default_locale: str):
         self.app.state.babel.default_locale = default_locale
@@ -54,3 +57,18 @@ class FastAPIAndBabel:
             translation = self.translations[language]
             translations[language] = translation.gettext(message)
         return translations
+    
+
+def ensure_instance() -> None:
+    if not FastAPIAndBabel.instance:
+        raise RuntimeError("An instance of FastAPIAndBabel class has not been created.")
+    
+
+def gettext(message: str) -> str:
+    ensure_instance()
+    return FastAPIAndBabel.instance.gettext(message)
+
+
+def ngettext(singular, plural, n) -> str:
+    ensure_instance()
+    return FastAPIAndBabel.instance.ngettext(singular, plural, n)
