@@ -15,20 +15,28 @@ class BabelConfiguration:
 class FastAPIAndBabel:
     instance: Optional["FastAPIAndBabel"] = None
 
-    def __init__(self, app: FastAPI, locale: str, domain: str = "messages", translation_directory: str = "translations") -> None:
+    def __init__(
+        self, 
+        app: FastAPI, 
+        root_dir: str,
+        locale: str, 
+        domain: str = "messages", 
+        translation_dir: str = "translations",
+    ) -> None:
         FastAPIAndBabel.instance = self
+        self.root_dir = root_dir
         self.locale = locale
         self.domain = domain
-        self.translation_directory = translation_directory
+        self.translation_dir = translation_dir
         self.translations = {}
         self.app = app
-
+        
         app.state.babel = BabelConfiguration(default_locale = self.locale, instance = self)
         app.add_middleware(Middleware)
 
     def load_translation(self, language: str):
         if language not in self.translations:
-            localedir = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../{self.translation_directory}")
+            localedir = os.path.join(os.path.dirname(os.path.abspath(self.root_dir)), self.translation_dir)
             localedir = os.path.normpath(localedir)
             translation = main_gettext.translation(self.domain, localedir, languages=[self.app.state.babel.default_locale])
             self.translations[language] = translation
