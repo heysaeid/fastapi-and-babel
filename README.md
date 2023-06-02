@@ -17,7 +17,7 @@ from fastapi_and_babel.translator import FastAPIAndBabel
 
 
 app = FastAPI()
-translator = FastAPIAndBabel(app, "de", "messages")
+translator = FastAPIAndBabel(app, __file__, "de")
 ```
 We create the following mapping file
 babel.cfg
