@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="fastapi-and-babel",
-    version='0.0.1',
+    version='0.0.2',
     url="https://github.com/heysaeid/fastapi-and-babel",
     license="MIT",
     author="Saeid Noormohammadi",

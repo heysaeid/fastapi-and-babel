@@ -91,4 +91,6 @@ venv.bak/
 
 site
 
+fastapi_and_babel.egg-info/
+build/
 .tool-versions

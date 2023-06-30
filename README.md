@@ -5,7 +5,7 @@ FastAPIAndBabel allows you to easily use babel in your FastAPI projects and offe
 ## Install 
 You can either download the source code of this repository or install it via pip:
 ```
-pip install git+https://github.com/heysaeid/fastapi-and-babel
+pip install fastapi-and-babel
 ```
 
 ## Usage
