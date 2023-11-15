@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="fastapi-and-babel",
-    version='0.0.2',
+    version='0.0.4',
     url="https://github.com/heysaeid/fastapi-and-babel",
     license="MIT",
     author="Saeid Noormohammadi",
@@ -24,15 +24,28 @@ setup(
     zip_safe=False,
     platforms="any",
     install_requires=[
-        "Babel",
+        "Babel==2.13.1",
         "fastapi",
     ],
-    classifiers=[
-        "Framework :: FastAPI",
+    classifiers = [
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: System Administrators",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python",
+        "Topic :: Internet",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Software Development :: Libraries",
+        "Typing :: Typed",
+        "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-    ],
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ]
 )

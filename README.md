@@ -1,4 +1,7 @@
 # FastAPI And Babel
+![FastAPI And Babel](https://raw.githubusercontent.com/heysaeid/fastapi-and-babel/master/docs/img/logo/Color%20logo%20-%20no%20background.png)
+
+
 FastAPIAndBabel allows you to easily use babel in your FastAPI projects and offers some features to improve and ease things.
 
 
@@ -17,7 +20,7 @@ from fastapi_and_babel.translator import FastAPIAndBabel
 
 
 app = FastAPI()
-translator = FastAPIAndBabel(app, __file__, "de")
+translator = FastAPIAndBabel(__file__, app, "en")
 ```
 We create the following mapping file
 babel.cfg
@@ -33,7 +36,7 @@ pybabel extract -F babel.cfg -o messages.pot .
 babel uses this file for mapping and stores the patterns in messages.pot
 
 ```
-pybabel init -i messages.pot -d translations -l fa
+pybabel init -i messages.pot -d translations -l en
 ```
 Here -d says to save translations in translations, you can change it in config
 

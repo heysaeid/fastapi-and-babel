@@ -4,6 +4,7 @@ from typing import Optional
 from dataclasses import dataclass
 from fastapi import FastAPI
 from fastapi_and_babel.middleware import Middleware 
+from fastapi_and_babel.exceptions import TranslationDirectoryNotFoundException
 
 
 @dataclass
@@ -17,39 +18,63 @@ class FastAPIAndBabel:
 
     def __init__(
         self, 
-        app: FastAPI, 
         root_dir: str,
-        locale: str, 
+        app: FastAPI = None, 
+        default_locale: str = "en",
         domain: str = "messages", 
         translation_dir: str = "translations",
+        add_default_middleware: bool = False,
     ) -> None:
         FastAPIAndBabel.instance = self
         self.root_dir = root_dir
-        self.locale = locale
+        self.locale = default_locale
         self.domain = domain
         self.translation_dir = translation_dir
         self.translations = {}
         self.app = app
         
-        app.state.babel = BabelConfiguration(default_locale = self.locale, instance = self)
-        app.add_middleware(Middleware)
+        if self.app:
+            app.state.babel = BabelConfiguration(default_locale = self.locale, instance = self)
+        
+        if add_default_middleware:
+            app.add_middleware(Middleware)
+        
+    def get_root_dir(self) -> str | None:
+        current_dir = self.root_dir
+        previous_dir = None
+
+        while current_dir != previous_dir:
+            package_json_path = os.path.join(current_dir, self.translation_dir)
+
+            if os.path.exists(package_json_path):
+                return str(current_dir) + f"/{self.translation_dir}"
+
+            previous_dir = current_dir
+            current_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+        
+        raise TranslationDirectoryNotFoundException(self.translation_dir)
 
     def load_translation(self, language: str):
         if language not in self.translations:
-            localedir = os.path.join(os.path.dirname(os.path.abspath(self.root_dir)), self.translation_dir)
-            localedir = os.path.normpath(localedir)
-            translation = main_gettext.translation(self.domain, localedir, languages=[self.app.state.babel.default_locale])
+            localedir = self.get_root_dir()
+            translation = main_gettext.translation(self.domain, localedir, languages=[self.get_current_locale()])
             self.translations[language] = translation
         return self.translations[language]
 
     def get_translation(self):
-        language = self.app.state.babel.default_locale
+        language = self.get_current_locale()
         if language not in self.translations:
             self.translations[language] = self.load_translation(language)
         return self.translations[language]
     
+    def get_current_locale(self) -> str:
+        return self.app.state.babel.default_locale if self.app else self.locale
+    
     def set_default_locale(self, default_locale: str):
-        self.app.state.babel.default_locale = default_locale
+        if self.app:
+            self.app.state.babel.default_locale = default_locale
+        else:
+            self.locale = default_locale
 
     def gettext(self, message):
         translation = self.get_translation()
