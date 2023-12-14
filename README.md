@@ -1,6 +1,10 @@
 # FastAPI And Babel
 ![FastAPI And Babel](https://raw.githubusercontent.com/heysaeid/fastapi-and-babel/master/docs/img/logo/Color%20logo%20-%20no%20background.png)
 
+[![Package version](https://img.shields.io/pypi/v/fastapi-and-babel?color=%2334D058&label=pypi%20package)](https://pypi.org/project/fastapi-and-babel/)
+[![Downloads](https://img.shields.io/pypi/dm/fastapi-and-babel)](https://pypi.org/project/fastapi-and-babel/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/fastapi-and-babel.svg?color=%2334D058)](https://pypi.org/project/fastapi-and-babel/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/heysaeid/fastapi-and-babel/blob/master/LICENSE)
 
 FastAPIAndBabel allows you to easily use babel in your FastAPI projects and offers some features to improve and ease things.
 
@@ -53,5 +57,3 @@ from fastapi_and_babel import gettext as _
 def index():
     return {"text": _("Hello World!")}
 ```
-
-
