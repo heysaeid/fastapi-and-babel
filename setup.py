@@ -1,13 +1,12 @@
 from setuptools import setup
 
-
-with open("README.md", "r") as f:
+with open("README.md") as f:
     long_description = f.read()
 
 
 setup(
     name="fastapi-and-babel",
-    version='0.0.4',
+    version="0.0.4",
     url="https://github.com/heysaeid/fastapi-and-babel",
     license="MIT",
     author="Saeid Noormohammadi",
@@ -16,9 +15,9 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords=[
-        "fastapi", 
-        "babel", 
-        "fastapi babel", 
+        "fastapi",
+        "babel",
+        "fastapi babel",
     ],
     packages=["fastapi_and_babel"],
     zip_safe=False,
@@ -27,7 +26,7 @@ setup(
         "Babel==2.13.1",
         "fastapi",
     ],
-    classifiers = [
+    classifiers=[
         "Intended Audience :: Information Technology",
         "Intended Audience :: System Administrators",
         "Operating System :: OS Independent",
@@ -47,5 +46,5 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
-    ]
+    ],
 )

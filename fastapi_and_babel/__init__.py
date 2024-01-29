@@ -1,9 +1,7 @@
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 
-from .translator import FastAPIAndBabel
-from .translator import gettext
-from .translator import ngettext
+from .translator import FastAPIAndBabel, gettext, ngettext
 
 __all__ = [
     "FastAPIAndBabel",

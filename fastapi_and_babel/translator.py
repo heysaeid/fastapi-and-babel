@@ -1,27 +1,29 @@
-import os
 import gettext as main_gettext
-from typing import Optional
+import os
 from dataclasses import dataclass
+from typing import Optional
+
 from fastapi import FastAPI
-from fastapi_and_babel.middleware import Middleware 
+
 from fastapi_and_babel.exceptions import TranslationDirectoryNotFoundException
+from fastapi_and_babel.middleware import Middleware
 
 
 @dataclass
 class BabelConfiguration:
     default_locale: str
-    instance: 'FastAPIAndBabel' = None 
+    instance: "FastAPIAndBabel" = None
 
 
 class FastAPIAndBabel:
     instance: Optional["FastAPIAndBabel"] = None
 
     def __init__(
-        self, 
+        self,
         root_dir: str,
-        app: FastAPI = None, 
+        app: FastAPI = None,
         default_locale: str = "en",
-        domain: str = "messages", 
+        domain: str = "messages",
         translation_dir: str = "translations",
         add_default_middleware: bool = False,
     ) -> None:
@@ -32,13 +34,15 @@ class FastAPIAndBabel:
         self.translation_dir = translation_dir
         self.translations = {}
         self.app = app
-        
+
         if self.app:
-            app.state.babel = BabelConfiguration(default_locale = self.locale, instance = self)
-        
+            app.state.babel = BabelConfiguration(
+                default_locale=self.locale, instance=self
+            )
+
         if add_default_middleware:
             app.add_middleware(Middleware)
-        
+
     def get_root_dir(self) -> str | None:
         current_dir = self.root_dir
         previous_dir = None
@@ -51,13 +55,15 @@ class FastAPIAndBabel:
 
             previous_dir = current_dir
             current_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
-        
+
         raise TranslationDirectoryNotFoundException(self.translation_dir)
 
     def load_translation(self, language: str):
         if language not in self.translations:
             localedir = self.get_root_dir()
-            translation = main_gettext.translation(self.domain, localedir, languages=[self.get_current_locale()])
+            translation = main_gettext.translation(
+                self.domain, localedir, languages=[self.get_current_locale()]
+            )
             self.translations[language] = translation
         return self.translations[language]
 
@@ -66,10 +72,10 @@ class FastAPIAndBabel:
         if language not in self.translations:
             self.translations[language] = self.load_translation(language)
         return self.translations[language]
-    
+
     def get_current_locale(self) -> str:
         return self.app.state.babel.default_locale if self.app else self.locale
-    
+
     def set_default_locale(self, default_locale: str):
         if self.app:
             self.app.state.babel.default_locale = default_locale
@@ -83,19 +89,21 @@ class FastAPIAndBabel:
     def ngettext(self, singular, plural, n):
         translation = self.get_translation()
         return translation.ngettext(singular, plural, n)
-    
+
     def get_multi_language_text(self, message: dict):
         translations = {}
         for language in self.translations.keys():
             translation = self.translations[language]
             translations[language] = translation.gettext(message)
         return translations
-    
+
 
 def ensure_instance() -> None:
     if not FastAPIAndBabel.instance:
-        raise RuntimeError("An instance of FastAPIAndBabel class has not been created.")
-    
+        raise RuntimeError(
+            "An instance of FastAPIAndBabel class has not been created."
+        )
+
 
 def gettext(message: str) -> str:
     ensure_instance()
